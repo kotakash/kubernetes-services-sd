@@ -1,0 +1,66 @@
+apiVersion: networking.istio.io/v1alpha3  
+kind: Gateway  
+metadata:  
+  name: validator-servicecharge-gateway  
+spec:  
+  selector:  
+    istio: ingressgateway # use Istio default gateway implementation  
+  servers:  
+  - port:  
+      name: http  
+      number: 80  
+      protocol: HTTP  
+    hosts:  
+    - '*'  
+---  
+apiVersion: networking.istio.io/v1alpha3  
+kind: VirtualService  
+metadata:  
+  name: validator-servicecharge  
+spec:  
+  hosts:  
+  - "*"  
+  gateways:  
+  - validator-servicecharge-gateway  
+  http:  
+  - match:  
+    - uri:  
+        prefix: /users
+    route:  
+    - destination:  
+        port:  
+          number: 8080  
+        host: validator
+  - match:  
+    - uri:  
+        prefix: /users
+    route:  
+    - destination:  
+        port:  
+          number: 8080  
+        host: validator
+  - match:  
+    - uri:  
+        prefix: /validate
+    route:  
+    - destination:  
+        port:  
+          number: 8080  
+        host: validator
+  - match:  
+    - uri:  
+        prefix: /Hello
+    route:  
+    - destination:  
+        port:  
+          number: 8080  
+        host: validator
+  - match:  
+    - uri:  
+        prefix: /servicecharge
+    route:  
+    - destination:  
+        port:  
+          number: 8080  
+        host: service-charge        
+
